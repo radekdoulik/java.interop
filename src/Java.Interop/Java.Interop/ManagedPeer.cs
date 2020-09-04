@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Diagnostics;
@@ -19,17 +19,20 @@ namespace Java.Interop {
 
 		static  readonly    JniPeerMembers  _members        = new JniPeerMembers (JniTypeName, typeof (ManagedPeer));
 
+		delegate void NativeDelegate_IntPtr_5 (IntPtr arg1, IntPtr arg2, IntPtr arg3, IntPtr arg4, IntPtr arg5);
+		delegate void NativeDelegate_IntPtr_6 (IntPtr arg1, IntPtr arg2, IntPtr arg3, IntPtr arg4, IntPtr arg5, IntPtr arg6);
+	 
 		static ManagedPeer ()
 		{
 			_members.JniPeerType.RegisterNativeMethods (
 					new JniNativeMethodRegistration (
 						"construct",
 						ConstructSignature,
-						(Action<IntPtr, IntPtr, IntPtr, IntPtr, IntPtr, IntPtr>) Construct),
+						(NativeDelegate_IntPtr_6) Construct),
 					new JniNativeMethodRegistration (
 						"registerNativeMembers",
 						RegisterNativeMembersSignature,
-						(Action<IntPtr, IntPtr, IntPtr, IntPtr, IntPtr>) RegisterNativeMembers)
+						(NativeDelegate_IntPtr_5) RegisterNativeMembers)
 			);
 		}
 

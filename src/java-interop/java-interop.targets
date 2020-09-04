@@ -50,6 +50,19 @@
     <Exec Command="install_name_tool -change /private/tmp/source-mono-4.4.0/bockbuild-mono-4.4.0-branch/profiles/mono-mac-xamarin/package-root/lib/libmonosgen-2.0.1.dylib /Library/Frameworks/Mono.framework/Libraries/libmonosgen-2.0.1.dylib &quot;$(_MacLib)&quot;" />
   </Target>
 
+  <Target Name="BuildWin"
+      AfterTargets="Build"
+      Condition=" '$(OS)' == 'Windows_NT'"
+      DependsOnTargets="_CompileObjectFiles"
+      Inputs="@(ClCompile)"
+      Outputs="$(_MacLib)">
+    <PropertyGroup>
+      <_LinkFlags>-fvisibility=hidden -Wl,-undefined -Wl,suppress -Wl,-flat_namespace</_LinkFlags>
+      <_Libs>$(MonoLibs)</_Libs>
+      <_Files>@(ClCompile->'obj\$(Configuration)\%(Filename).o', ' ')</_Files>
+    </PropertyGroup>
+  </Target>
+
   <Target Name="BuildUnixLibraries"
       AfterTargets="Build"
       Condition=" '$(OS)' != 'Windows_NT' And !Exists ('/Library/Frameworks/')"

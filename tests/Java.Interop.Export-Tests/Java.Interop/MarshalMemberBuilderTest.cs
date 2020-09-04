@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Reflection.Emit;
 
 using Java.Interop;
 
@@ -200,25 +201,19 @@ namespace Java.InteropTests
 		{
 			Console.WriteLine ("## member: {0}", memberName);
 			Console.WriteLine (expression.ToCSharpCode ());
-			var da = AppDomain.CurrentDomain.DefineDynamicAssembly(
-				new AssemblyName("dyn"), // call it whatever you want
-				System.Reflection.Emit.AssemblyBuilderAccess.Save,
-				Path.GetDirectoryName (typeof (MarshalMemberBuilderTest).Assembly.Location));
+			var da = AssemblyBuilder.DefineDynamicAssembly (new AssemblyName ("dyn"), AssemblyBuilderAccess.Run);
 
-			var _name = "dyn-" + memberName + ".dll";
-			var dm = da.DefineDynamicModule("dyn_mod", _name);
+			var dm = da.DefineDynamicModule("dyn_mod");
 			var dt = dm.DefineType ("dyn_type", TypeAttributes.Public);
 			var mb = dt.DefineMethod(
 				memberName,
 				MethodAttributes.Public | MethodAttributes.Static);
 
-			expression.CompileToMethod (mb);
+			//expression.CompileToMethod (mb);
+			var compiledDelegate = expression.Compile ();
 			dt.CreateType();
 			Assert.AreEqual (expressionType,    expression.Type);
 			Assert.AreEqual (expectedBody,      expression.ToCSharpCode ());
-#if !__ANDROID__
-			da.Save (_name);
-#endif  // !__ANDROID__
 		}
 
 		[Test]

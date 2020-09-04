@@ -43,6 +43,9 @@ namespace Java.Interop {
 			if (onMono) {
 				ValueManager            = ValueManager              ?? new MonoRuntimeValueManager ();
 				ObjectReferenceManager  = ObjectReferenceManager    ?? new MonoRuntimeObjectReferenceManager ();
+			} else {
+				ValueManager = ValueManager ?? new DotNetRuntimeValueManager ();
+				ObjectReferenceManager = ObjectReferenceManager ?? new DotnetRuntimeObjectReferenceManager ();
 			}
 		}
 

@@ -370,7 +370,11 @@ namespace Java.Interop {
 			return Expression.Property (null, typeof (JniEnvironment), "Runtime");
 		}
 
+#if NETCOREAPP3_1
+		static  MethodInfo  FormatterServices_GetUninitializedObject    = Type.GetType ("System.Runtime.Serialization.FormatterServices, System.Runtime.Serialization.Formatters", throwOnError: true)
+#else
 		static  MethodInfo  FormatterServices_GetUninitializedObject    = Type.GetType ("System.Runtime.Serialization.FormatterServices", throwOnError: true)
+#endif
 			.GetRuntimeMethod ("GetUninitializedObject", new[]{typeof (Type)});
 		static  MethodInfo  IJavaPeerable_SetPeerReference              = typeof (IJavaPeerable).GetRuntimeMethod ("SetPeerReference", new[]{typeof (JniObjectReference)});
 
